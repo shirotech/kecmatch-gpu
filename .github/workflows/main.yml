@@ -1,0 +1,28 @@
+name: "Build"
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  x86_64_linux:
+    name: "kecmatch64_linux"
+    runs-on: [ubuntu-24.04]
+    container: nvidia/cuda:12.6.0-devel-ubuntu24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Build"
+        run: |
+          make
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: kecmatch64_linux
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          draft: true
+          replacesArtifacts: false
